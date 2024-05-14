@@ -1,5 +1,5 @@
-import { LoginClientPage } from "@/clientApp";
+import { RootClientPage } from "@/clientApp";
 
 export default function Home() {
-  return <LoginClientPage />;
+  return <RootClientPage />;
 }

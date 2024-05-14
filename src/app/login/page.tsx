@@ -1,13 +1,19 @@
 "use client";
-import { Button, chakra, Flex, Heading } from "@chakra-ui/react";
+import { Button, chakra, Flex, Heading, theme } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useContext } from "react";
+import { CiLogin } from "react-icons/ci";
 
 import { PasswordField, TextField } from "@/components";
 import { LoginSchema } from "@/constants";
+import { SessionContext } from "@/providers";
+import { SignInData } from "@/types";
 
 export default function LoginPage() {
-  function handleSubmit(values: unknown) {
-    console.log("🚀 ~ handleSubmit ~ values:", values);
+  const { signIn } = useContext(SessionContext);
+
+  async function handleSubmit(values: SignInData) {
+    await signIn(values);
   }
 
   return (
@@ -23,7 +29,7 @@ export default function LoginPage() {
         w="60vw"
         h="80vh"
         rounded="xl"
-        backgroundImage="url(img/background_tc.png)"
+        backgroundImage="url(background_tc.png)"
         backgroundPosition="left"
       >
         <Flex
@@ -80,6 +86,9 @@ export default function LoginPage() {
                   <Button
                     type="submit"
                     isLoading={isSubmitting}
+                    rightIcon={
+                      <CiLogin size={30} color={theme.colors.gray[800]} />
+                    }
                     w="full"
                     colorScheme="yellow"
                   >

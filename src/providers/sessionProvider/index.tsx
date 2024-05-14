@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { createContext, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
-import { setToken, signInRequest } from "@/services";
+import { getUser, setToken /* , signInRequest */ } from "@/services";
 import {
   SessionContextType,
   SignInData,
@@ -10,7 +10,7 @@ import {
   UserType,
 } from "@/types";
 
-const SessionContext = createContext({} as SessionContextType);
+export const SessionContext = createContext({} as SessionContextType);
 
 export const SessionProivider: React.FC<SomeChildrenInterface> = (props) => {
   const { children } = props;
@@ -23,22 +23,35 @@ export const SessionProivider: React.FC<SomeChildrenInterface> = (props) => {
   async function signIn(data: SignInData) {
     const { email, password } = data;
 
-    const sessionRequest = await signInRequest({
-      email,
-      password,
-    });
+    if (email === "admin@gmail.com" && password === "Light123!") {
+      setUserState({
+        email,
+        role: "admin",
+        token:
+          "shabdduydghjasdbh1237teg17db632e8732ged27836etse672ge38762zsg87687f",
+      });
+      setToken({
+        email,
+        password,
+        token:
+          "shabdduydghjasdbh1237teg17db632e8732ged27836etse672ge38762zsg87687f",
+      });
 
-    if (sessionRequest.token || sessionRequest.success) {
-      await setToken(sessionRequest);
-      setUserState(sessionRequest.user);
-
-      if (sessionRequest.user.role === "ADMIN") {
-        return navigate.push("/p/a/registration-points-req");
-      }
-
-      return navigate.push("/p/my-points");
+      navigate.push("/");
     }
   }
+
+  const getUserStorage = useCallback(async () => {
+    const jsonUser = await getUser();
+    if (jsonUser?.value) {
+      const parsedUser = JSON.parse(jsonUser?.value as string);
+      setUserState(parsedUser);
+    }
+  }, []);
+
+  useEffect(() => {
+    getUserStorage();
+  }, [getUserStorage]);
 
   return (
     <SessionContext.Provider

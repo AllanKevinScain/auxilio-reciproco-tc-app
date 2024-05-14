@@ -14,16 +14,21 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { Modal } from "@/components";
-import { granteesMock, grantessInitialValues } from "@/constants";
+import { Header, Modal } from "@/components";
+import {
+  /* granteesMock, */
+  granteesMockStatic,
+  grantessInitialValues,
+} from "@/constants";
 
-export const LoginClientPage = () => {
+export const RootClientPage = () => {
   const [stateModals, seStateModals] = useState({
     success: false,
     edit: false,
     create: false,
   });
   const [initialStates, seInitialStates] = useState(grantessInitialValues);
+  const [isOpenDrawer, seIsOpenDrawer] = useState(false);
 
   function handleCloseModal(value: string) {
     seStateModals((s) => ({ ...s, [value]: false }));
@@ -35,24 +40,18 @@ export const LoginClientPage = () => {
 
   function handleEdit(valueId: string) {
     handleOpenModal("edit");
-    const filter = granteesMock.filter((i) => i.id === valueId)[0];
+    const filter = granteesMockStatic.filter((i) => i.id === valueId)[0];
 
     seInitialStates(filter);
   }
 
   return (
     <chakra.main display="flex" flexDir="column" gap="5" pb="5">
-      <Flex
-        as="nav"
-        h="60px"
-        justify="flex-end"
-        align="center"
-        px={["5%", "10%", "20%"]}
-        boxShadow="md"
-        bg="blue.900"
-      >
-        <Button onClick={() => handleOpenModal("create")}>Novo usuário</Button>
-      </Flex>
+      <Header
+        isOpenDrawer={isOpenDrawer}
+        onAppearDrawer={() => seIsOpenDrawer((s) => !s)}
+        onOpenCreateModal={() => handleOpenModal("create")}
+      />
       <Flex
         flexDir="column"
         mx={["4%", "6%", "10%"]}
@@ -76,7 +75,7 @@ export const LoginClientPage = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {granteesMock.map((i) => {
+              {granteesMockStatic.map((i) => {
                 return (
                   <Tr
                     key={i.id}

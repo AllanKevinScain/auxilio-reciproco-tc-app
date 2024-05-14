@@ -7,17 +7,15 @@ const ageCookie = {
 };
 
 export async function getToken() {
-  return cookies().get("authfofao.token");
+  return cookies().get("authtc.data");
 }
 
 export async function getUser() {
-  return cookies().get("authfofao.user");
+  return cookies().get("authtc.data");
 }
 
 export async function deleteToken() {
-  cookies().delete("authfofao.token");
-  cookies().delete("authfofao.user");
-  cookies().delete("authfofao.role");
+  cookies().delete("authtc.data");
 }
 
 export async function setToken(values: unknown) {
