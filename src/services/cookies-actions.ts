@@ -21,6 +21,7 @@ export async function deleteToken() {
 export async function setToken(values: unknown) {
   cookies().set("authtc.data", JSON.stringify(values), {
     priority: "high",
+    httpOnly: true,
     ...ageCookie,
   });
 }
