@@ -1,5 +1,5 @@
 import { GranteeCreateType } from "../grantee";
 
-export interface EditGranteeFormInterface {
+export interface GranteeFormInterface {
   initialValues: GranteeCreateType;
 }

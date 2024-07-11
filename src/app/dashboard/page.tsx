@@ -6,8 +6,10 @@ import { useCallback, useEffect, useState } from "react";
 import { GranteeListType } from "@/types";
 import { formatCPF } from "@brazilian-utils/brazilian-utils";
 import { formatPhoneNumber } from "@/helpers";
-import Link from "next/link";
+import { AiFillPlusCircle } from "react-icons/ai";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import colors from "tailwindcss/colors";
 
 export default function DashBoard() {
   const session = useSession();
@@ -67,7 +69,18 @@ export default function DashBoard() {
         search={search}
       />
 
-      <div className="flex flex-col mx-[12vw] overflow-auto rounded-lg border border-slate-300 p-10">
+      <div className="flex w-full max justify-end">
+        <Button
+          variant="default"
+          className="w-fit relative"
+          onClick={() => navigate.push("/grantee-create")}
+        >
+          <AiFillPlusCircle size={30} color={colors.zinc[700]} />
+          Cadastrar Novo
+        </Button>
+      </div>
+
+      <div className="flex flex-col mx-[14vw] overflow-auto rounded-lg border border-slate-300 p-10">
         <table className="max w-full">
           <thead className="text-left text-zinc-800">
             <tr>

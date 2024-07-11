@@ -2,22 +2,20 @@
 import { GranteeFormInterface, GranteeCreateType } from "@/types";
 import { Form, Formik } from "formik";
 import { FormikInput } from "../formikInput";
-import { editGranteeSchema } from "@/yup";
+import { createGranteeSchema } from "@/yup";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
-export const EditGranteeForm: React.FC<GranteeFormInterface> = ({
+export const CreateGranteeForm: React.FC<GranteeFormInterface> = ({
   initialValues,
 }) => {
   const navigate = useRouter();
 
   async function handleSubmit(values: GranteeCreateType) {
-    const { id, ...rest } = values;
-    const req = await fetch(`/api/grantee?id=${id}`, {
-      method: "PUT",
-      body: JSON.stringify(rest),
+    const req = await fetch(`/api/grantee`, {
+      method: "POST",
+      body: JSON.stringify(values),
     });
-
     const res = await req.json();
     console.log("🚀 ~ handleSubmit ~ res:", res);
 
@@ -29,14 +27,14 @@ export const EditGranteeForm: React.FC<GranteeFormInterface> = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={editGranteeSchema}
+      validationSchema={createGranteeSchema}
       onSubmit={(values) => handleSubmit(values)}
     >
       {({ errors, touched }) => {
         return (
           <Form className="max w-full">
             <h1 className="font-black text-xl text-zinc-800 text-center pb-10">
-              Formulário de Edição
+              Formulário de Criação
             </h1>
             <FormikInput
               label="Nome"
