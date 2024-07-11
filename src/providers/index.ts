@@ -1,1 +1,1 @@
-export * from "./sessionProvider";
+export * from "./next-auth";

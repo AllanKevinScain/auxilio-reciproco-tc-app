@@ -1,36 +1,42 @@
-import "../styles/globals.css";
-
-import { ChakraProvider, theme } from "@chakra-ui/react";
 import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Session, getServerSession } from "next-auth";
+import { NextAuthProvider } from "@/providers";
+import { cn } from "@/lib/utils";
+import { authOptions } from "@/lib/next-auth";
 
-import { SessionProivider } from "@/providers";
-import { SomeChildrenInterface } from "@/types";
-
-const rubik = Rubik({
+const fontSans = Inter({
   subsets: ["latin"],
-  variable: "--font-rubik",
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "Auxílio recíproco TC",
-  description: "Criado por Allan Scain e Flamarion Fagundes",
+  title: "Login Azure",
+  description: "Teste de Allan",
 };
 
-function RootLayout({ children }: Readonly<SomeChildrenInterface>) {
+interface SomeChildInterface {
+  children: React.ReactNode;
+}
+
+export default async function RootLayout({ children }: SomeChildInterface) {
+  let session = {} as Session;
+  const getSession = await getServerSession(authOptions);
+  if (getSession !== null) {
+    session = getSession;
+  }
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        suppressHydrationWarning={true}
-        className={rubik.className}
-        style={{ backgroundColor: theme.colors.blue[100] }}
+        className={cn(
+          "h-screen font-sans antialiased bg-slate-100",
+          fontSans.variable
+        )}
       >
-        <SessionProivider>
-          <ChakraProvider>{children}</ChakraProvider>
-        </SessionProivider>
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>
       </body>
     </html>
   );
 }
-
-export default RootLayout;

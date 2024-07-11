@@ -1,20 +1,13 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("next-auth.session-token");
 
-export function middleware(request: NextRequest) {
-  const authtcCookie = request.cookies.get("authtc.data");
-  const cookieValue = authtcCookie?.value;
-  const loginPage = request.nextUrl.pathname.startsWith("/login");
-
-  if (cookieValue === undefined) {
-    return NextResponse.rewrite(new URL("/login", request.url));
+  if (token?.value) {
+    return NextResponse.next();
   }
 
-  if (cookieValue !== undefined && loginPage) {
-    return NextResponse.rewrite(new URL("/", request.url));
-  }
+  return NextResponse.redirect(new URL("/", req.url));
 }
-
 export const config = {
-  matcher: ["/", "/login"],
+  matcher: "/dashboard/:path*",
 };
