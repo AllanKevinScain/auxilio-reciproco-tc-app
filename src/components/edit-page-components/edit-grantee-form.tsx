@@ -13,13 +13,33 @@ export const EditGranteeForm: React.FC<GranteeFormInterface> = ({
 
   async function handleSubmit(values: GranteeCreateType) {
     const { id, ...rest } = values;
+
+    function repleced(e: string | undefined) {
+      if (e) {
+        return e.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(" ", "");
+      }
+      return undefined;
+    }
+
+    const newObject = {
+      ...rest,
+      cpf: repleced(rest.cpf),
+      address: {
+        ...rest.address,
+        postalCode: repleced(rest.address.postalCode),
+      },
+      contact: {
+        ...rest.contact,
+        phoneNumber: repleced(rest.contact.phoneNumber),
+      },
+    };
+
     const req = await fetch(`/api/grantee?id=${id}`, {
       method: "PUT",
-      body: JSON.stringify(rest),
+      body: JSON.stringify(newObject),
     });
 
     const res = await req.json();
-    console.log("🚀 ~ handleSubmit ~ res:", res);
 
     if (res.success) {
       navigate.push("/dashboard");

@@ -31,14 +31,12 @@ export const CreateGranteeForm: React.FC<GranteeFormInterface> = ({
         phoneNumber: repleced(values.contact.phoneNumber),
       },
     };
-    console.log("🚀 ~ handleSubmit ~ newObject:", newObject);
 
     const req = await fetch(`/api/grantee`, {
       method: "POST",
       body: JSON.stringify(newObject),
     });
     const res = await req.json();
-    console.log("🚀 ~ handleSubmit ~ res:", res);
 
     if (res.id) {
       navigate.push("/dashboard");
