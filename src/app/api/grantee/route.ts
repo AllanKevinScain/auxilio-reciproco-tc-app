@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const body = request.body;
+  const body = await request.json();
   const searchParams = request.nextUrl.searchParams;
   const id = searchParams.get("id");
 
@@ -36,7 +36,7 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = request.body;
+  const body = await request.json();
 
   const res = await fetch(`${baseURLAPI()}/grantee`, {
     method: "POST",
@@ -55,13 +55,12 @@ export async function DELETE(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const id = searchParams.get("id");
 
-  const res = await fetch(`${baseURLAPI()}/grantee/${id}`, {
+  const req = await fetch(`${baseURLAPI()}/grantee/${id}`, {
     method: "DELETE",
     headers: {
       "api-key": process.env.API_KEY,
     },
   });
-  const data = await res.json();
 
-  return Response.json(data);
+  return Response.json(req.status);
 }

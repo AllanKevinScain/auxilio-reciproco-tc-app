@@ -12,14 +12,35 @@ export const CreateGranteeForm: React.FC<GranteeFormInterface> = ({
   const navigate = useRouter();
 
   async function handleSubmit(values: GranteeCreateType) {
+    function repleced(e: string | undefined) {
+      if (e) {
+        return e.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(" ", "");
+      }
+      return undefined;
+    }
+
+    const newObject = {
+      ...values,
+      cpf: repleced(values.cpf),
+      address: {
+        ...values.address,
+        postalCode: repleced(values.address.postalCode),
+      },
+      contact: {
+        ...values.contact,
+        phoneNumber: repleced(values.contact.phoneNumber),
+      },
+    };
+    console.log("🚀 ~ handleSubmit ~ newObject:", newObject);
+
     const req = await fetch(`/api/grantee`, {
       method: "POST",
-      body: JSON.stringify(values),
+      body: JSON.stringify(newObject),
     });
     const res = await req.json();
     console.log("🚀 ~ handleSubmit ~ res:", res);
 
-    if (res.success) {
+    if (res.id) {
       navigate.push("/dashboard");
     }
   }
@@ -135,8 +156,8 @@ export const CreateGranteeForm: React.FC<GranteeFormInterface> = ({
                   !!errors.address?.street && !!touched.address?.street
                 }
                 error={errors.address?.street}
-                id="address.?.street"
-                name="address.?.street"
+                id="address.street"
+                name="address.street"
                 placeholder="Digite a rua"
               />
             </div>

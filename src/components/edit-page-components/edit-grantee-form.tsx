@@ -137,8 +137,8 @@ export const EditGranteeForm: React.FC<GranteeFormInterface> = ({
                   !!errors.address?.street && !!touched.address?.street
                 }
                 error={errors.address?.street}
-                id="address.?.street"
-                name="address.?.street"
+                id="address.street"
+                name="address.street"
                 placeholder="Digite a rua"
               />
             </div>
