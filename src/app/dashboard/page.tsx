@@ -6,10 +6,17 @@ import { useCallback, useEffect, useState } from "react";
 import { GranteeListType } from "@/types";
 import { formatCPF } from "@brazilian-utils/brazilian-utils";
 import { formatPhoneNumber } from "@/helpers";
-import { AiFillPlusCircle } from "react-icons/ai";
+import {
+  AiFillDelete,
+  AiFillEdit,
+  AiFillEye,
+  AiFillPlusCircle,
+} from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import colors from "tailwindcss/colors";
+import Link from "next/link";
+import { twMerge } from "tailwind-merge";
 
 export default function DashBoard() {
   const session = useSession();
@@ -44,9 +51,6 @@ export default function DashBoard() {
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
   }
-  function handleNavigate(e: string) {
-    navigate.push(e);
-  }
 
   const listGrantees = useCallback(async () => {
     const req = await fetch("/api/grantees", {
@@ -56,6 +60,14 @@ export default function DashBoard() {
 
     setGrantees(res.items);
   }, []);
+
+  async function handleDelete(e: string) {
+    await fetch(`/api/grantee?id=${e}`, {
+      method: "DELETE",
+    });
+
+    await listGrantees();
+  }
 
   useEffect(() => {
     listGrantees();
@@ -99,8 +111,7 @@ export default function DashBoard() {
               return (
                 <tr
                   key={grantee.id}
-                  className="cursor-pointer transition-all hover:border-b hover:text-zinc-400"
-                  onClick={() => handleNavigate(`/grantee-edit/${grantee.id}`)}
+                  className="transition-all hover:border-b hover:text-zinc-400"
                 >
                   <td className="py-1 min-w-[280px]">{grantee.name}</td>
                   <td className="py-1 min-w-[280px]">
@@ -113,6 +124,36 @@ export default function DashBoard() {
                   </td>
                   <td className="py-1 min-w-[280px]">
                     {street + "," + number + "," + neighborhood + " - " + city}
+                  </td>
+                  <td className="flex py-1 min-w-[120px] gap-2">
+                    <Button
+                      variant="secondary"
+                      onClick={() => handleDelete(grantee.id)}
+                      className="p-0 hover:text-black"
+                    >
+                      <AiFillDelete
+                        size={25}
+                        className={twMerge("text-zinc-400", "hover:text-black")}
+                      />
+                    </Button>
+                    <Link
+                      href={`/grantee-edit/${grantee.id}`}
+                      className="flex justify-center items-center"
+                    >
+                      <AiFillEdit
+                        size={25}
+                        className={twMerge("text-zinc-400", "hover:text-black")}
+                      />
+                    </Link>
+                    <Link
+                      href={`/grantee-view/${grantee.id}`}
+                      className="flex justify-center items-center"
+                    >
+                      <AiFillEye
+                        size={25}
+                        className={twMerge("text-zinc-400", "hover:text-black")}
+                      />
+                    </Link>
                   </td>
                 </tr>
               );
