@@ -1,18 +1,19 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 import { NavBar } from "@/components";
 import { Session } from "next-auth";
 import { useCallback, useEffect, useState } from "react";
-import { GranteeType } from "@/types";
+import { GranteeListType } from "@/types";
 import { formatCPF } from "@brazilian-utils/brazilian-utils";
 import { formatPhoneNumber } from "@/helpers";
-import { twMerge } from "tailwind-merge";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DashBoard() {
   const session = useSession();
+  const navigate = useRouter();
 
-  const [grantees, setGrantees] = useState<GranteeType[]>([]);
+  const [grantees, setGrantees] = useState<GranteeListType[]>([]);
   const [search, setSearch] = useState("");
 
   const headers = ["Nome", "Nome dos Familiares", "CPF/Contato", "Endereço"];
@@ -34,12 +35,15 @@ export default function DashBoard() {
     }
   });
 
-  const resultGrantees: GranteeType[] = filterdGranteesBySearch
+  const resultGrantees: GranteeListType[] = filterdGranteesBySearch
     ? filterdGranteesBySearch
     : grantees;
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
+  }
+  function handleNavigate(e: string) {
+    navigate.push(e);
   }
 
   const listGrantees = useCallback(async () => {
@@ -80,7 +84,11 @@ export default function DashBoard() {
             {resultGrantees.map((grantee) => {
               const { street, number, neighborhood, city } = grantee.address;
               return (
-                <tr key={grantee.id}>
+                <tr
+                  key={grantee.id}
+                  className="cursor-pointer transition-all hover:border-b hover:text-zinc-400"
+                  onClick={() => handleNavigate(`/grantee-edit/${grantee.id}`)}
+                >
                   <td className="py-1 min-w-[280px]">{grantee.name}</td>
                   <td className="py-1 min-w-[280px]">
                     {grantee.familyNames.join(",")}

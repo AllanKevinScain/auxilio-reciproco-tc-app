@@ -1,4 +1,9 @@
-export type GranteeType = {
+import { InferType } from "yup";
+import { createGranteeSchema } from "@/yup";
+
+export type GranteeCreateType = InferType<typeof createGranteeSchema>;
+
+export type GranteeListType = {
   id: string;
   name: string;
   cpf: string;

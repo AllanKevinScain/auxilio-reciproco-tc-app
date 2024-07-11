@@ -6,13 +6,12 @@ import colors from "tailwindcss/colors";
 import { Button } from "../ui/button";
 import { NavbarInterface } from "@/types";
 import { useState } from "react";
-import { SearchInput } from "./input";
-import { signOut } from "next-auth/react";
 import { Signout } from "./signout";
 
 export const NavBar: React.FC<NavbarInterface> = ({
   session,
   search,
+  showSearch = true,
   onSearch = () => null,
 }) => {
   const path = usePathname();
@@ -23,7 +22,7 @@ export const NavBar: React.FC<NavbarInterface> = ({
     ? session.user?.image
     : "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg";
 
-  const accessPages = [{ label: "Dashboard", href: "#" }];
+  const accessPages = [{ label: "Dashboard", href: "/dashboard" }];
 
   function handleAppear() {
     setIsOpen((s) => !s);
@@ -72,9 +71,11 @@ export const NavBar: React.FC<NavbarInterface> = ({
               </div>
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:block">
-            <Signout value={search} onChange={onSearch} />
-          </div>
+          {showSearch && (
+            <div className="hidden sm:ml-6 sm:block">
+              <Signout value={search} onChange={onSearch} />
+            </div>
+          )}
           <img
             className="h-8 w-8 rounded-full ml-3"
             src={image}
@@ -84,7 +85,7 @@ export const NavBar: React.FC<NavbarInterface> = ({
       </div>
 
       <div className="flex flex-col pt-3 sm:hidden" id="mobile-menu">
-        <Signout value={search} onChange={onSearch} />
+        {showSearch && <Signout value={search} onChange={onSearch} />}
 
         <div
           className={twMerge(
