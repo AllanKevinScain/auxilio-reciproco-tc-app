@@ -71,7 +71,7 @@ export const CreateGranteeForm: React.FC<GranteeFormInterface> = ({
   } = useFormik({
     initialValues: initialValues,
     validationSchema: createGranteeSchema,
-    onSubmit: (values) => onSubmit(values),
+    onSubmit: (currValues) => onSubmit(currValues),
   });
 
   function handleAddFamilyNameMember(e: React.KeyboardEvent<HTMLInputElement>) {

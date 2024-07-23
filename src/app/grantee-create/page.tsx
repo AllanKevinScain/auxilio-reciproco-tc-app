@@ -6,7 +6,7 @@ export default async function CreateGrantee() {
   const session = await getServerSession(authOptions);
 
   return (
-    <main className="flex flex-col h-full w-full gap-10 pb-10">
+    <div className="flex flex-col h-full w-full gap-10 pb-10">
       <NavBar session={session as Session} showSearch={false} />
       <CreateGranteeForm
         initialValues={{
@@ -28,6 +28,6 @@ export default async function CreateGrantee() {
           id: "",
         }}
       />
-    </main>
+    </div>
   );
 }

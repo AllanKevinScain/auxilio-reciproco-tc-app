@@ -17,7 +17,7 @@ export function httpException(data: Response) {
   }
 
   if (data.status === 400) {
-    throw new Error("Erro na chamda");
+    throw new Error("Erro na chamada");
   }
 
   return data;

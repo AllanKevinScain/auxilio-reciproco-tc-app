@@ -1,7 +1,9 @@
 import { EditGranteeForm, NavBar } from "@/components";
-import { baseURLCLIENTAPI } from "@/helpers";
+import { baseURLCLIENTAPI, formatPhoneNumber } from "@/helpers";
 import { authOptions } from "@/lib/next-auth";
-import { CreateGranteeParamsInterface } from "@/types";
+import { CreateGranteeParamsInterface, GranteeCreateType } from "@/types";
+import { formatCEP, formatCPF } from "@brazilian-utils/brazilian-utils";
+import { format } from "date-fns";
 import { getServerSession, Session } from "next-auth";
 
 export default async function CreateGrantee({
@@ -16,13 +18,29 @@ export default async function CreateGrantee({
         method: "GET",
       }
     );
-    const res = await req.json();
+    const res = (await req.json()) as GranteeCreateType;
 
     return (
-      <main className="flex flex-col h-full w-full gap-10 pb-10">
+      <div className="flex flex-col h-full w-full gap-10 pb-10">
         <NavBar session={session as Session} showSearch={false} />
-        <EditGranteeForm initialValues={res} />
-      </main>
+        <EditGranteeForm
+          initialValues={{
+            ...res,
+            address: {
+              ...res.address,
+              postalCode: formatCEP(res.address.postalCode),
+            },
+            ...(res.birthDate && {
+              birthDate: format(res.birthDate, "yyyy-MM-dd"),
+            }),
+            cpf: formatCPF(res.cpf),
+            contact: {
+              ...res.contact,
+              phoneNumber: formatPhoneNumber(res.contact.phoneNumber),
+            },
+          }}
+        />
+      </div>
     );
   }
 }

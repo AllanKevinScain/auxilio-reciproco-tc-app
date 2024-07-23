@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Session, getServerSession } from "next-auth";
-import { NextAuthProvider } from "@/providers";
+import { LoadingProvider, NextAuthProvider } from "@/providers";
 import { cn } from "@/lib/utils";
 import { authOptions } from "@/lib/next-auth";
 
@@ -12,8 +12,11 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Login Azure",
-  description: "Teste de Allan",
+  title: {
+    template: "%s | Auxílio TC",
+    default: "Login",
+  },
+  description: "Login Page",
 };
 
 interface SomeChildInterface {
@@ -35,7 +38,11 @@ export default async function RootLayout({ children }: SomeChildInterface) {
           fontSans.variable
         )}
       >
-        <NextAuthProvider session={session}>{children}</NextAuthProvider>
+        <LoadingProvider>
+          <NextAuthProvider session={session}>
+            <main className="h-screen">{children}</main>
+          </NextAuthProvider>
+        </LoadingProvider>
       </body>
     </html>
   );

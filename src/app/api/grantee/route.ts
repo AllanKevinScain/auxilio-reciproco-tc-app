@@ -33,6 +33,7 @@ export async function PUT(request: NextRequest) {
     },
     body: JSON.stringify(body),
   });
+  console.log("🚀 ~ req ~ req:", req);
 
   httpException(req);
 

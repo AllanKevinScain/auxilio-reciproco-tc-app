@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import { NavBar } from "@/components";
 import { Session } from "next-auth";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { GranteeListType } from "@/types";
 import { formatCPF } from "@brazilian-utils/brazilian-utils";
 import { formatPhoneNumber } from "@/helpers";
@@ -17,8 +17,11 @@ import { Button } from "@/components/ui/button";
 import colors from "tailwindcss/colors";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import { LoadingContext } from "@/providers";
 
 export default function DashBoard() {
+  const { setIsLoading } = useContext(LoadingContext);
+
   const session = useSession();
   const navigate = useRouter();
 
@@ -67,11 +70,18 @@ export default function DashBoard() {
   }, []);
 
   async function handleDelete(e: string) {
-    await fetch(`/api/grantee?id=${e}`, {
-      method: "DELETE",
-    });
+    setIsLoading(true);
+    try {
+      await fetch(`/api/grantee?id=${e}`, {
+        method: "DELETE",
+      });
 
-    await listGrantees();
+      await listGrantees();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -79,7 +89,7 @@ export default function DashBoard() {
   }, [listGrantees]);
 
   return (
-    <main className="flex flex-col h-full w-full gap-10 pb-10">
+    <div className="flex flex-col h-full w-full gap-10 pb-10">
       <NavBar
         session={session.data as Session}
         onSearch={handleSearch}
@@ -169,6 +179,6 @@ export default function DashBoard() {
           <span className="text-center">Nenhum registro encontrado!</span>
         )}
       </div>
-    </main>
+    </div>
   );
 }
