@@ -23,7 +23,7 @@ export const authOptions: AuthOptions = {
           value: "Lulu221101$",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, _) {
         if (!credentials || !credentials.email || !credentials.password) {
           return null;
         }
@@ -70,13 +70,13 @@ export const authOptions: AuthOptions = {
 
       return accessTruth;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl;
     },
-    async session({ session, user, token }) {
+    async session({ session }) {
       return session;
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token }) {
       return token;
     },
   },

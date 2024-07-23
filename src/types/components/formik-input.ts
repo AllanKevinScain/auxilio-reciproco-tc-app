@@ -6,4 +6,5 @@ export interface FormikInputInterface extends InputType {
   isInvalid: boolean;
   error: string | undefined;
   label: string;
+  hasChildren?: boolean;
 }

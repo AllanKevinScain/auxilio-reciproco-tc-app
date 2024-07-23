@@ -77,5 +77,6 @@
 
   .max {
     @apply mx-auto;
-    @apply max-w-7xl;
+    @apply max-w-xs;
+    @apply md:max-w-7xl
   }

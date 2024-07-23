@@ -7,7 +7,7 @@ export interface NavbarInterface {
   session: Session;
   showSearch?: boolean;
   search?: string;
-  onSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch?: (_: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface SearchInputInterface extends InputProps {}

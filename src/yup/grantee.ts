@@ -6,7 +6,7 @@ import {
 import * as yup from "yup";
 
 const contactSchema = yup.object({
-  email: yup.string().email("Email inválido!"),
+  email: yup.string().email("Email inválido!").required("Email obrigatório!"),
   phoneNumber: yup
     .string()
     .test({
@@ -19,20 +19,23 @@ const contactSchema = yup.object({
         return true;
       },
     })
-    .required("Número de telefone obrigatório!"),
+    .required("Telefone obrigatório!"),
 });
 
 const addressSchema = yup.object({
-  postalCode: yup.string().test({
-    name: "cepValidation",
-    message: "CEP inválido!",
-    test: (value = "", { createError, ...rest }) => {
-      if (!isValidCEP(value)) {
-        return createError({ ...rest });
-      }
-      return true;
-    },
-  }),
+  postalCode: yup
+    .string()
+    .test({
+      name: "cepValidation",
+      message: "CEP inválido!",
+      test: (value = "", { createError, ...rest }) => {
+        if (!isValidCEP(value)) {
+          return createError({ ...rest });
+        }
+        return true;
+      },
+    })
+    .required("CEP obrigatório!"),
   city: yup.string().required("Cidade obrigatório!"),
   street: yup.string().required("Rua obrigatório!"),
   neighborhood: yup.string().required("Bairro obrigatório!"),
@@ -41,7 +44,7 @@ const addressSchema = yup.object({
 
 export const createGranteeSchema = yup.object().shape({
   id: yup.string(),
-  name: yup.string().required("Nome obrigatório!"),
+  name: yup.string().min(3, "Nome muito curto!").required("Nome obrigatório!"),
   cpf: yup
     .string()
     .test({
@@ -57,7 +60,7 @@ export const createGranteeSchema = yup.object().shape({
     .required("CPF obrigatório!"),
   familyNames: yup
     .array()
-    .of(yup.string())
+    .of(yup.string().required("Nome dos familiares obrigatório!"))
     .required("Nome dos familiares obrigatório!"),
   birthDate: yup.string(),
   contact: contactSchema,

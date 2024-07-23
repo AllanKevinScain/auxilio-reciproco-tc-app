@@ -28,17 +28,22 @@ export default function DashBoard() {
   const headers = ["Nome", "Nome dos Familiares", "CPF/Contato", "Endereço"];
 
   const filterdGranteesBySearch = grantees.filter((grantee) => {
-    const { name, contact, address, cpf } = grantee;
+    const { name, contact, address, cpf, familyNames } = grantee;
     const { phoneNumber } = contact;
     const { street, number, neighborhood, city } = address;
     const mountedAddress = `${street},${number},${neighborhood} - ${city}`;
+    const familyNamesLower = familyNames.map((i) => i.toLocaleLowerCase());
     const lowerSearch = search.toLocaleLowerCase();
+    const itsHasFamily = familyNamesLower.filter((i) =>
+      i.includes(lowerSearch)
+    );
 
     if (
       name.toLocaleLowerCase().includes(lowerSearch) ||
       phoneNumber.toLocaleLowerCase().includes(lowerSearch) ||
       cpf.toLocaleLowerCase().includes(lowerSearch) ||
-      mountedAddress.toLocaleLowerCase().includes(lowerSearch)
+      mountedAddress.toLocaleLowerCase().includes(lowerSearch) ||
+      itsHasFamily.some((i) => i)
     ) {
       return grantee;
     }
