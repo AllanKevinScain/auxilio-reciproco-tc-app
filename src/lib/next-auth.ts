@@ -42,10 +42,12 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
+      checks: ["none"],
     }),
   ],
   pages: {
     signIn: "/",
+    error: "/error",
   },
   callbacks: {
     async signIn(data) {
@@ -66,6 +68,11 @@ export const authOptions: AuthOptions = {
             accessTruth = true;
           }
         }
+      }
+
+      if (!accessTruth) {
+        localStorage.clear();
+        sessionStorage.clear();
       }
 
       return accessTruth;
